@@ -16,5 +16,5 @@ COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock
 RUN pipenv install --deploy --system
 
-#  requirements.txt file
+# If using requirements.txt file...
 # RUN pip install -r requirements.txt
