@@ -161,7 +161,12 @@ services:
       - DJANGO_SETTINGS_MODULE=webapp.settings-dev
 ```
 
-The build instructions come from the `Dockerfile` inside the project root (detailed above), we start the development server on port 8000 (this is the default, so no surprise here), and we set an environment variable indicating that Django should use the development environment settings module.
+There are few things happening here:
+
+- the build instructions come from the `Dockerfile` inside the project root (detailed above);
+- the development server starts, accessible on port 8000 (this is the default, so no surprise here);
+- the entire project directory is mounted as a volume inside the container
+- and we set the environment variable indicating that Django should use the development environment settings module.
 
 ### Production
 
@@ -260,3 +265,10 @@ in both the webapp and the server service. Additionally, the server also mounts 
 
 - `docker-compose -f docker-compose-prod.yml up`
 
+## Additional References
+
+- Django: [https://docs.djangoproject.com/en/2.1/](https://docs.djangoproject.com/en/2.1/)
+- Docker: [https://docs.docker.com](https://docs.docker.com)
+- Docker Compose: [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
+- Gunicorn: [https://gunicorn.org/](https://gunicorn.org/)
+- Nginx: [https://nginx.org/en/docs/](https://nginx.org/en/docs/)
