@@ -9,7 +9,7 @@ Django is a high-level Python Web framework that encourages rapid development an
 
 ### What does this project accomplish?
 
-This uses Docker-based scripts to deploy a multi-container Django 2.1 project (container 1) and serve with Nginx (container 2). Some details are outlined below.
+This uses Docker-based scripts to deploy a multi-container Django 2.1 project (container 1) and serve it with Nginx (container 2). Some details are outlined below.
 
 - Python 3.7
 - Django 2.1.2
