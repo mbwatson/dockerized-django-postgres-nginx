@@ -1,6 +1,6 @@
 # Containerized Django App w/ Postgres (soon) served by Nginx
 
-This is for running an existing Django project, although this repository contains the starter project created with `django-admin startproject`. Modifications to the project to align with common workflow situations are described below.
+This is for running an existing Django project, although this repository contains the starter project created with `django-admin startproject`. Modifications to the project to align with common workflow situations are described below. The base project already has migrations in place and a superuser (admin:misterios) to get up and running quickly.
 
 ## Preparation
 
