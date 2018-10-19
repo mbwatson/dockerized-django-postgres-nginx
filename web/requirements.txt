@@ -10,5 +10,5 @@
 # `Pipfile.lock` and then regenerate `requirements*.txt`.
 ################################################################################
 
-django==2.1
+django==2.1.2
 gunicorn
