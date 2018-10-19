@@ -1,4 +1,4 @@
-# Containerized Django App w/ (Postgres soon) served by Nginx
+# Containerized Django App w/ Postgres (soon) served by Nginx
 
 This is for running an existing project
 
