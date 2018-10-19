@@ -40,7 +40,7 @@ The production situation is a little more involved. We start two (soon to be thr
 The webapp service is our Django project container, which is served via gunicorn by the command
 
 ```
-command: gunicorn -w 4 webapp.wsgi:application -b 0.0.0.0:8000
+    command: gunicorn -w 4 webapp.wsgi:application -b 0.0.0.0:8000
 ```
 
 Nginx will serve the static assets (as outlined in [the Django documentation](https://docs.djangoproject.com/en/2.1/howto/static-files/deployment/), so we mount those directories as separate volumes with
