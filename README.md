@@ -1,18 +1,19 @@
-# Containerized Django App w/ Postgres (soon) served by Nginx
+# Containerized Django App served by Nginx
+##(& soon with PostgreSQL)
 
 This is for running an existing Django project, although this repository contains the starter project created with `django-admin startproject`. Modifications to the project to align with common workflow situations are described below. The base project already has migrations in place and a superuser (admin:misterios) to get up and running quickly.
 
-## Preparation
+### Preparation
 
 - Make sure your project already contains the directories referenced by the settings file--`media`, `static`, etc.
 - Otherwise, Docker will create them, and they will be owned by root.
 - Do the manage.py stuff in your environment--migrate, createsuperuser, collectstatic.
 
-## Docker Compose
+### Docker Compose
 
 Two Docker Compose files exist here--one for development and one for production.
 
-### Development
+#### Development
 
 The development container simply serves the Django project via its builtin development server. Thus the `docker-compose.yml` file is small:
 
@@ -33,7 +34,7 @@ services:
 
 The build instructions come from the Dockerfile inside the project root, we start the development server on port 8000 (this is the default, so no surprise here), and we set the settings module to a development-specific settings module (more on this below).
 
-### Production
+#### Production
 
 The production situation is a little more involved. We start two (soon to be three) services: a server and our web application.
 
@@ -59,11 +60,11 @@ in the webapp service and the server service. The server service also mounts our
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
 ```
 
-## Project Requirements
+### Project Requirements
 
 Your Django project should reside in the `web` directory. One commonly uses either Pipenv or a requirements.txt file to define your project dependencies. Below describes how to proceed in either case. Note that if using one method, comment out the other.
 
-### Using Pipenv?
+#### Using Pipenv?
 
 Ensure your project has Pipfile and Pipfile.lock files, and make sure the following lines are uncommented in `web/Dockerfile`.
 
@@ -73,7 +74,7 @@ COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock
 ```
 
-### Using requirement.txt?
+#### Using requirement.txt?
 
 Make sure the `requirements.txt` file resides in root of your Django project, and uncomment the following line in `web/Dockerfile`.
 
@@ -83,7 +84,7 @@ RUN pip install -r requirements.txt
 
 Note that if you are using Pipenv, but still want to use a `requirements.txt` file, it can be generated with the `pipenv_to_requirements` module. Simply install the module with `pipenv install pipenv_to_requirements` and run `pipenv_to_requirements` in the environment (or `pipenv run pipenv_to_requirements` outside the environment).
 
-## Django Settings
+### Django Settings
 
 We often want to define settings modules for different environments (dev, prod, etc.), and this can be accomplished by creating additional settings files in the project root. The sample project in this repository already has this in place, but we'll describe here how to implement development- and production-specific settings in an existing project.
 
@@ -103,14 +104,14 @@ services:
     ...
 ```
 
-## Running the Containers
+### Running the Containers
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed vero explicabo dolorem dicta officia repellendus saepe non autem nemo eveniet ullam, qui fugit vitae iusto, sequi assumenda! Necessitatibus, vel, sapiente.
 
-### Development
+#### Development
 
 - `docker-compose up`
 
-### Production
+#### Production
 
 - `docker-compose -f docker-compose-prod.yml up`
