@@ -11,4 +11,4 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_SETTINGS_MODULE=settings.development
+      - DJANGO_SETTINGS_MODULE=webapp.settings-dev

@@ -18,7 +18,7 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DJANGO_SETTINGS_MODULE=settings.production
+      - DJANGO_SETTINGS_MODULE=webapp.settings-prod
   server:
     container_name: server
     image: nginx:latest
