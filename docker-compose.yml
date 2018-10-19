@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  webapp:
+    build:
+      context: ./web/
+      dockerfile: Dockerfile
+    command: python3 ./web/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/web
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=settings.development

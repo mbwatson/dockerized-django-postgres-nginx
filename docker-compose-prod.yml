@@ -1,0 +1,32 @@
+version: '3'
+
+volumes:
+  static_files:
+  media:
+  conf:
+
+services:
+  webapp:
+    container_name: webapp
+    build:
+      context: ./web/
+      dockerfile: Dockerfile
+    command: gunicorn -w 4 webapp.wsgi:application -b 0.0.0.0:8000
+    volumes:
+      - ./web/static_files:/web/static_files
+      - ./web/media:/web/media
+    ports:
+      - 8000:8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=settings.production
+  server:
+    container_name: server
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./web/static_files:/web/static_files
+      - ./web/media:/web/media
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - webapp
