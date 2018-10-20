@@ -2,6 +2,7 @@ version: '3'
 
 services:
   webapp:
+    container_name: django
     build:
       context: ./web/
       dockerfile: Dockerfile
@@ -12,3 +13,15 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=webapp.settings-dev
+  db:
+    image: postgres:10
+    container_name: postgres
+    environment:
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASS: postgres_password
+    volumes:
+      - ./web/pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
