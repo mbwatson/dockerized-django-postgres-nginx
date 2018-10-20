@@ -14,3 +14,16 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+        'NAME': os.environ.get('POSTGRES_DB', 'postgres_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres_user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres_password'),
+    }
+}

@@ -24,9 +24,9 @@ This project is for running an existing Django project, although this repository
 
 ## Preparing your Project
 
-As mentioned above, this project comes packaged with the auto-generated Django project provided by `django-admin`. Beginning with this project, a more substantial project can be built. The more likely case is that you have an existing project, and you wish to drop it into this project. This section describes that process. Note that this walkthrough makes a few (reasonably common) assumptions about file locations and such.
+As mentioned above, this project comes packaged with the auto-generated Django project provided by `django-admin`. Beginning with this project, a more substantial project can be built. However, the more likely case is that you have an existing project, and you wish to drop it into *this* project. This section is intended to shed light on that process. Note that this walkthrough makes a few (reasonably common) assumptions about file locations and such.
 
-Your Django project will live in the `./web` directory, and will henceforth be referred to as the project's root directory. Below, you'll see the structure of that directory.
+Your Django project will live in the `./web` directory of this repository, and will henceforth be referred to as the Django project's root directory. Below, you'll see the structure of that directory.
 
 ```
 $ tree ./web

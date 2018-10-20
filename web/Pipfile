@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django = "==2.1.2"
 gunicorn = "*"
+"psycopg2" = "*"
 
 [dev-packages]
 
