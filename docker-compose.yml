@@ -27,8 +27,9 @@ services:
       POSTGRES_USER: postgres_user
       POSTGRES_PASSWORD: postgres_password
       POSTGRES_PORT: 5432
+    user: "${UID}:${GID}"
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./postgres/pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
