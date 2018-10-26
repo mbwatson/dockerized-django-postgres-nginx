@@ -14,6 +14,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+# DEBUG_PROPAGATE_EXCEPTIONS = True
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
