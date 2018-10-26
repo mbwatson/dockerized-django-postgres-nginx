@@ -1,5 +1,4 @@
-# Containerized Django App served by Nginx
-(& soon with PostgreSQL)
+# Containerized Django App using PostgreSQL served by Nginx
 
 ## Summary
 
@@ -9,12 +8,12 @@ Django is a high-level Python Web framework that encourages rapid development an
 
 ### What does this project accomplish?
 
-This uses Docker-based scripts to deploy a multi-container Django 2.1 project (container 1) and serve with Nginx (container 2). Some details are outlined below.
+This uses Docker-based scripts to deploy a multi-container Django 2.1 project (container 1) and serve it with Nginx (container 2). Some details are outlined below.
 
 - Python 3.7
 - Django 2.1.2
 - Pipenv virtual environment management
-- (soon) PostgreSQL database
+- PostgreSQL database
 - Gunicorn for serving application
 - Nginx for serving application and static files on separate volumes
 - Assumes separated docker-compose environemt settings, with detailed instruction for achieving this workflow below.
@@ -24,9 +23,9 @@ This project is for running an existing Django project, although this repository
 
 ## Preparing your Project
 
-As mentioned above, this project comes packaged with the auto-generated Django project provided by `django-admin`. Beginning with this project, a more substantial project can be built. The more likely case is that you have an existing project, and you wish to drop it into this project. This section describes that process. Note that this walkthrough makes a few (reasonably common) assumptions about file locations and such.
+As mentioned above, this project comes packaged with the auto-generated Django project provided by `django-admin`. Beginning with this project, a more substantial project can be built. However, the more likely case is that you have an existing project, and you wish to drop it into *this* project. This section is intended to shed light on that process. Note that this walkthrough makes a few (reasonably common) assumptions about file locations and such.
 
-Your Django project will live in the `./web` directory, and will henceforth be referred to as the project's root directory. Below, you'll see the structure of that directory.
+Your Django project will live in the `./web` directory of this repository, and will henceforth be referred to as the Django project's root directory. Below, you'll see the structure of that directory.
 
 ```
 $ tree ./web
@@ -170,10 +169,10 @@ There are few things happening here:
 
 ### Production
 
-The production situation is a little more involved but still quite simple. We start two (soon to be three) services: a server and our web application. Sping these containers up with `docker-compose -f docker-compose-prod.yml up`.
+The production situation is a little more involved but still quite simple. We start three services: our application, its database, and a webserver. Spin these containers up with `docker-compose -f docker-compose.prod.yml up`, which constructs the services according to the `docker-compose.prod.yml` file show here.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
 
 version: '3'
 
@@ -181,6 +180,7 @@ volumes:
   static_files:
   media:
   conf:
+  pgdata:
 
 services:
   webapp:
@@ -195,7 +195,20 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DJANGO_SETTINGS_MODULE=webapp.settings-prod
+      DJANGO_SETTINGS_MODULE: webapp.settings-prod
+    env_file:
+      - ./postgres/db.env
+    depends_on:
+      - db
+  db:
+    image: postgres:10
+    container_name: postgres
+    env_file:
+      - ./postgres/db.env
+    volumes:
+      - ./postgres/pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
   server:
     container_name: server
     image: nginx:latest
@@ -208,12 +221,15 @@ services:
     depends_on:
       - webapp
 
+
 ```
+
+#### The Application
 
 The webapp service is our Django project container, which is served via [Gunicorn](https://gunicorn.org/) by issuing the following command.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
     
     ...
     command: gunicorn -w 4 webapp.wsgi:application -b 0.0.0.0:8000
@@ -223,7 +239,7 @@ The webapp service is our Django project container, which is served via [Gunicor
 We also set an environment variable indicating that Django should use the production environment settings module.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
     
     ...
     environment:
@@ -231,10 +247,22 @@ We also set an environment variable indicating that Django should use the produc
     ...
 ```
 
+There are other database-related environment variables that are required by both the `webapp` and the `db` services and are thus extracted to an external file: `/postgres/db.env`.
+
+#### The Database
+
+The database is built off of the `postgres:10` image. The database credentials live in an external file (`postgres/db.env`), as they are also required by Django running in the `webapp` service.
+
+\* Note: Any database credentials altered in the `postgres/db.env` file will be conveniently scooped up by the necessary services. However, if you've already created the database, you will need to make the changes to the existing database by hand or take the more bullish approach and drop the volume completely and start fresh.
+
+Finally, we create a volume for the database so our data persists and pass traffic through the standard PostgreSQL port 5432. Notice that volume is listed at the top of the file with the `webapp` volumes.
+
+#### The Server
+
 Nginx will serve the static assets (as outlined in [the Django documentation](https://docs.djangoproject.com/en/2.1/howto/static-files/deployment/), so we mount those directories as separate volumes with
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
 
     ...
     volumes:
@@ -243,10 +271,10 @@ Nginx will serve the static assets (as outlined in [the Django documentation](ht
     ...
 ```
 
-in both the webapp and the server service. Additionally, the server also mounts our custom nginx configuration file `./nginx/default.conf` file to replace the default Nginx `.conf` file.
+in both the `webapp` and the `server` service. Additionally, we also mount our custom nginx configuration file `./nginx/default.conf` file to replace the default Nginx `.conf` file.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
         
     ...
     volumes:
@@ -261,9 +289,13 @@ in both the webapp and the server service. Additionally, the server also mounts 
 
 - `docker-compose up`
 
+The first time your application runs, the database will not be set up, and a 500 Server Error will be thrown at you. Thus you'll need to run the standard `python manage.py makemigrations` and `python manage.py migrate`  commands inside the `webapp` container to initialize the database.
+
+This goes for `python manage.py createsuperuser`, too.
+
 ### Dockerize Production
 
-- `docker-compose -f docker-compose-prod.yml up`
+- `docker-compose -f docker-compose.prod.yml up`
 
 ## Additional References
 
