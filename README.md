@@ -164,12 +164,13 @@ There are few things happening here:
 
 - the build instructions come from the `Dockerfile` inside the project root (detailed above);
 - the development server starts, accessible on port 8000 (this is the default, so no surprise here);
-- the entire project directory is mounted as a volume inside the container
+- the entire project directory is mounted as a volume inside the container;
 - and we set the environment variable indicating that Django should use the development environment settings module.
+- 
 
 ### Production
 
-The production situation is a little more involved but still quite simple. We start three services: our application, its database, and a webserver. Spin these containers up with `docker-compose -f docker-compose.prod.yml up`, which constructs the services according to the `docker-compose.prod.yml` file show here.
+The production situation is a little more involved but still quite simple. We start three services: our application (`webapp`), its database (`db`), and a webserver (`server`). These containers are spun up according to the `docker-compose.prod.yml` file show here.
 
 ```
 # ./docker-compose.prod.yml
@@ -285,7 +286,7 @@ in both the `webapp` and the `server` service. Additionally, we also mount our c
 
 ## Quickstart
 
-### Dockerize Development
+### Development
 
 - `docker-compose up`
 
@@ -293,7 +294,7 @@ The first time your application runs, the database will not be set up, and a 500
 
 This goes for `python manage.py createsuperuser`, too.
 
-### Dockerize Production
+### Production
 
 - `docker-compose -f docker-compose.prod.yml up`
 
