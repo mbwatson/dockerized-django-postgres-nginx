@@ -170,10 +170,10 @@ There are few things happening here:
 
 ### Production
 
-The production situation is a little more involved but still quite simple. We start two (soon to be three) services: a server and our web application. Sping these containers up with `docker-compose -f docker-compose-prod.yml up`.
+The production situation is a little more involved but still quite simple. We start two (soon to be three) services: a server and our web application. Sping these containers up with `docker-compose -f docker-compose.prod.yml up`.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
 
 version: '3'
 
@@ -213,7 +213,7 @@ services:
 The webapp service is our Django project container, which is served via [Gunicorn](https://gunicorn.org/) by issuing the following command.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
     
     ...
     command: gunicorn -w 4 webapp.wsgi:application -b 0.0.0.0:8000
@@ -223,7 +223,7 @@ The webapp service is our Django project container, which is served via [Gunicor
 We also set an environment variable indicating that Django should use the production environment settings module.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
     
     ...
     environment:
@@ -234,7 +234,7 @@ We also set an environment variable indicating that Django should use the produc
 Nginx will serve the static assets (as outlined in [the Django documentation](https://docs.djangoproject.com/en/2.1/howto/static-files/deployment/), so we mount those directories as separate volumes with
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
 
     ...
     volumes:
@@ -246,7 +246,7 @@ Nginx will serve the static assets (as outlined in [the Django documentation](ht
 in both the webapp and the server service. Additionally, the server also mounts our custom nginx configuration file `./nginx/default.conf` file to replace the default Nginx `.conf` file.
 
 ```
-# ./docker-compose-prod.yml
+# ./docker-compose.prod.yml
         
     ...
     volumes:
@@ -263,7 +263,7 @@ in both the webapp and the server service. Additionally, the server also mounts 
 
 ### Dockerize Production
 
-- `docker-compose -f docker-compose-prod.yml up`
+- `docker-compose -f docker-compose.prod.yml up`
 
 ## Additional References
 
