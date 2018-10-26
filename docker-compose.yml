@@ -1,14 +1,34 @@
 version: '3'
 
+volumes:
+  pgdata:
+
 services:
   webapp:
+    container_name: django
     build:
       context: ./web/
       dockerfile: Dockerfile
     command: python3 ./web/manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/web
+      - .:/src
     ports:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=webapp.settings-dev
+    depends_on:
+      - db
+  db:
+    image: postgres:10
+    container_name: postgres
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_PORT: 5432
+    volumes:
+      - ./postgres/pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
